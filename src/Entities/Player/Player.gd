@@ -16,7 +16,7 @@ export var Max_Speed = 150
 export var Friction = 500
 
 var idle_animation = "Idle"
-var run_animation  = "Run"
+var run_animation  = "run"
 var attack_animation = "Attack"
 
 var movement_norm = Vector2.ZERO
@@ -35,22 +35,22 @@ func get_input():
 	movement_norm = Vector2(int(Input.is_action_pressed("RIGHT")) - int(Input.is_action_pressed("LEFT")),
 								int(Input.is_action_pressed("DOWN")) - int(Input.is_action_pressed("UP")))
 	
-#	if movement_norm.x != 0:
-#		sprite.flip_h = movement_norm.x
+	if movement_norm.x != 0:
+		sprite.flip_h = movement_norm.x + 1
 	
 	if movement_norm.length() > 0:
 		movement_norm = movement_norm.normalized()
 	
 
 func update_animations():
-	if state == Idle:
-		animation_player.play(idle_animation)
+#	if state == Idle:
+#		animation_player.play(idle_animation)
 	
 	if state == Run:
 		animation_player.play(run_animation)
 
-	if state == Attack:
-		animation_player.play(attack_animation)
+#	if state == Attack:
+#		animation_player.play(attack_animation)
 
 
 func _physics_process(delta):
@@ -73,7 +73,7 @@ func _physics_process(delta):
 	elif state != Attack:
 		state = Idle
 	
-#	update_animations()
+	update_animations()
 
 func move_toward(from, to, step):
 	if to < 0 && from > 0: # Flip step if the signs of to and from are opposite-ish
