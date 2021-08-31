@@ -25,6 +25,7 @@ onready var player_detection_zone = $PlayerDetectionZone
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	randomize()
 	state = pick_random_state([ IDLE, WANDER ])
 
 func _physics_process(delta: float) -> void:
