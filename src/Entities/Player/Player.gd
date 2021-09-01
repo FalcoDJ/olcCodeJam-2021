@@ -53,9 +53,11 @@ func update_animations():
 #		animation_player.play(attack_animation)
 
 
-func _physics_process(delta):
+func _process(delta: float) -> void:
 	get_input()
-	
+	update_animations()
+
+func _physics_process(delta):
 	var new_Acceleration = Acceleration
 	
 	if movement_norm.distance_to(old_movement_norm) > 0.5:
@@ -72,8 +74,6 @@ func _physics_process(delta):
 		state = Run
 	elif state != Attack:
 		state = Idle
-	
-	update_animations()
 
 func move_toward(from, to, step):
 	if to < 0 && from > 0: # Flip step if the signs of to and from are opposite-ish
