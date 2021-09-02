@@ -44,10 +44,11 @@ script = ExtResource( 3 )
 
 [node name="Sprite" type="Sprite" parent="PlayerActor"]
 position = Vector2( 3.8147e-06, -7.62939e-06 )
-rotation = 0.404916
 texture = ExtResource( 2 )
+flip_h = true
 hframes = 8
-vframes = 5
+vframes = 6
+frame = 37
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerActor"]
 position = Vector2( 3.8147e-06, -7.62939e-06 )
