@@ -15,16 +15,24 @@ export var Acceleration = 200
 export var Max_Speed = 150
 export var Friction = 500
 
+onready var player_hurt_sfx = preload("res://src/Entities/Player/PlayerHurtSound.tscn")
+
+onready var hurt_box = $HurtBox
+onready var stats = $Stats
+
+onready var sprite           : Sprite          = $Sprite
+onready var animation_player : AnimationPlayer = $AnimationPlayer
+onready var animation_tree : AnimationTree = $AnimationTree
+onready var animation_state = animation_tree.get("parameters/playback")
+
 var idle_animation = "Idle"
-var run_animation  = "run"
+var run_horiz_animation  = "run_horiz"
+var run_up_animation = "run_up"
 var attack_animation = "Attack"
 
 var movement_norm = Vector2.ZERO
 var old_movement_norm = Vector2.ZERO
 var velocity = Vector2.ZERO
-
-onready var sprite           : Sprite          = $Sprite
-onready var animation_player : AnimationPlayer = $AnimationPlayer
 
 func _ready():
 	pass
@@ -43,11 +51,14 @@ func get_input():
 	
 
 func update_animations():
-#	if state == Idle:
-#		animation_player.play(idle_animation)
+	if movement_norm != Vector2.ZERO:
+		animation_tree.set("parameters/idle/blend_position", movement_norm)
+		animation_tree.set("parameters/run/blend_position", movement_norm)
 	
+	if state == Idle:
+		animation_state.travel("idle")
 	if state == Run:
-		animation_player.play(run_animation)
+		animation_state.travel("run")
 
 #	if state == Attack:
 #		animation_player.play(attack_animation)
@@ -80,3 +91,10 @@ func move_toward(from, to, step):
 		step *= -1
 	
 	return from + (to - (from + step))
+
+func _on_HurtBox_area_entered(area: Area2D) -> void:
+	stats.health -= area.damage
+	hurt_box.start_invincibility(0.6)
+	hurt_box.create_hit_effect()
+	var player_hurt_sound = player_hurt_sfx.instance()
+	get_tree().current_scene.add_child(player_hurt_sound)

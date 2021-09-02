@@ -29,6 +29,7 @@ __meta__ = {
 }
 
 [node name="Portal" parent="." instance=ExtResource( 6 )]
+frame = 2
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
@@ -45,8 +46,8 @@ script = ExtResource( 3 )
 position = Vector2( 3.8147e-06, -7.62939e-06 )
 rotation = 0.404916
 texture = ExtResource( 2 )
-hframes = 6
-frame = 5
+hframes = 8
+vframes = 5
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerActor"]
 position = Vector2( 3.8147e-06, -7.62939e-06 )

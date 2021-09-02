@@ -13,15 +13,21 @@ _global_script_classes=[ {
 "class": "Actor",
 "language": "GDScript",
 "path": "res://src/Entities/Player/Player.gd"
+}, {
+"base": "Node",
+"class": "Stats",
+"language": "GDScript",
+"path": "res://src/Stats.gd"
 } ]
 _global_script_class_icons={
-"Actor": ""
+"Actor": "",
+"Stats": ""
 }
 
 [application]
 
 config/name="olcCodeJam 2021"
-run/main_scene="res://src/Test World.tscn"
+run/main_scene="res://src/Menus/OpeningScene/StoryMovie.tscn"
 config/icon="res://icon.png"
 
 [display]
