@@ -11,7 +11,7 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	if player_detection_zone.can_see_player():
-		get_tree().change_scene("res://src/Test World.tscn")
+		get_tree().change_scene("res://src/Test_Boss_fight.tscn")
 
 func _on_Portal_finished() -> void:
 	start_timer.start()
