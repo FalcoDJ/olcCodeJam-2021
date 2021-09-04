@@ -644,7 +644,6 @@ tile_data = PoolIntArray( -196610, 0, 0, -196609, 0, 1, -262144, 0, 1, -262143, 
 
 [node name="Portal" parent="." instance=ExtResource( 5 )]
 position = Vector2( 160, 22 )
-frame = 0
 
 [node name="StartTimer" type="Timer" parent="."]
 one_shot = true

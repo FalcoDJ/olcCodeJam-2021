@@ -22,9 +22,13 @@ export var FRICTION = 200
 
 onready var DeathEffect = preload("res://assets/Effects/EnemyDeathEffect.tscn")
 
-onready var Projectile = preload("res://src/Entities/Boss/Projectiles/Ball.tscn")
+onready var Projectile = preload("res://src/Entities/Projectiles/Ball.tscn")
 var projectile_timer = 0.0
 const PROJECTILE_RELOAD_TIME = 2.5
+
+var wiggle_distance = 48.0
+var wiggle_duration = 0.5
+var wiggle_timer = 0.0
 
 onready var stats = $Stats
 onready var player_detection_zone = $PlayerDetectionZone
@@ -58,16 +62,20 @@ func _physics_process(delta: float) -> void:
 	
 	velocity = move_and_slide(velocity)
 
-func _exit_tree() -> void:
-	player = null
-
 func attack_state_process(delta: float) -> void:
 	match attack_state:
 		AttackStates.Floating:
 			animation_player.play("float")
 			projectile_timer += delta
+			wiggle_timer += delta
+			
+			if wiggle_timer >= wiggle_duration:
+				wiggle_distance *= -1
+				wiggle_timer = 0.0
+			
 			velocity.y = min((player.global_position.y - global_position.y - 64) * MAX_SPEED * delta, MAX_SPEED)
-			velocity.x = min((player.global_position.x - global_position.x) * MAX_SPEED * delta, MAX_SPEED)
+			velocity.x = min((player.global_position.x - global_position.x + wiggle_distance * wiggle_timer) * MAX_SPEED * delta, MAX_SPEED)
+			
 			if projectile_timer > PROJECTILE_RELOAD_TIME:
 				projectile_timer = 0.0
 				var ball = Projectile.instance()
@@ -77,6 +85,9 @@ func attack_state_process(delta: float) -> void:
 			animation_player.play("stomp")
 			velocity.y = min((player.global_position.y - global_position.y - 16) * MAX_SPEED * delta, MAX_SPEED)
 			velocity.x = min((player.global_position.x - global_position.x - 16) * MAX_SPEED * delta, MAX_SPEED)
+
+func _exit_tree() -> void:
+	player = null
 
 func set_player(body: Actor) -> void:
 	player = body

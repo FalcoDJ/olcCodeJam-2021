@@ -7,7 +7,7 @@ onready var portal = $Portal
 onready var player_detection_zone = $PlayerDetectionZone
 
 func _ready() -> void:
-	player.set_process(false)
+	player.pause()
 
 func _process(delta: float) -> void:
 	if player_detection_zone.can_see_player():
@@ -17,8 +17,7 @@ func _on_Portal_finished() -> void:
 	start_timer.start()
 
 func _on_StartTimer_timeout() -> void:
-	player.set_process(true)
-
+	player.un_pause()
 
 func _on_DialogBox_finished_dialog() -> void:
 	portal.start_terminate()

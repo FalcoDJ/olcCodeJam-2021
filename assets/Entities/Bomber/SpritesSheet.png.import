@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Sprite-0005.png-c6e79b0dc3ff79d30c2237446e72e44c.stex"
+path="res://.import/SpritesSheet.png-98666741be9cff0c7a6db7b778647316.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/Sprite-0005.png"
-dest_files=[ "res://.import/Sprite-0005.png-c6e79b0dc3ff79d30c2237446e72e44c.stex" ]
+source_file="res://assets/Entities/Bomber/SpritesSheet.png"
+dest_files=[ "res://.import/SpritesSheet.png-98666741be9cff0c7a6db7b778647316.stex" ]
 
 [params]
 

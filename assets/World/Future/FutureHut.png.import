@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/Bush.png-859dfe01fab34f1473e40aa1c95ea894.stex"
+path="res://.import/FutureHut.png-705fef7b63b87b236f707f5b9327461f.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/World/Bush.png"
-dest_files=[ "res://.import/Bush.png-859dfe01fab34f1473e40aa1c95ea894.stex" ]
+source_file="res://assets/World/Future/FutureHut.png"
+dest_files=[ "res://.import/FutureHut.png-705fef7b63b87b236f707f5b9327461f.stex" ]
 
 [params]
 

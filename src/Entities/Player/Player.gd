@@ -18,6 +18,7 @@ export var Friction = 500
 onready var hurt_box = $HurtBox
 onready var stats = $Stats
 
+onready var DeathEffect = preload("res://assets/Effects/EnemyDeathEffect.tscn")
 onready var player_hurt_sfx = preload("res://src/Entities/Player/PlayerHurtSound.tscn")
 onready var sprite           : Sprite          = $Sprite
 onready var animation_player : AnimationPlayer = $AnimationPlayer
@@ -127,3 +128,9 @@ func _on_HurtBox_invincibility_ended() -> void:
 func AttackAnimation_finished() -> void:
 	state = Run
 	velocity = Vector2.ZERO
+
+func _on_Stats_no_health() -> void:
+	queue_free()
+	var player_explosiion = DeathEffect.instance()
+	get_parent().add_child(player_explosiion)
+	player_explosiion.global_position = global_position
