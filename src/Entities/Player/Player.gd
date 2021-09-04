@@ -4,11 +4,13 @@ class_name Actor
 enum {
 	Idle=0,
 	Run=1,
-	Attack=2
+	Attack=2,
+	STUCK
 }
 
-var state = Idle
+var state = Run
 
+export var Knockback_Distance = 120
 export var Acceleration = 200
 export var Max_Speed = 150
 export var Friction = 500
@@ -21,6 +23,7 @@ onready var sprite           : Sprite          = $Sprite
 onready var animation_player : AnimationPlayer = $AnimationPlayer
 onready var blink_animation_player : AnimationPlayer = $BlinkAnimationPlayer
 onready var animation_tree : AnimationTree = $AnimationTree
+onready var bat_hitbox = $HitBoxPivot/HitBox
 onready var animation_state = animation_tree.get("parameters/playback")
 
 var idle_animation = "Idle"
@@ -31,9 +34,10 @@ var attack_animation = "Attack"
 var movement_norm = Vector2.ZERO
 var old_movement_norm = Vector2.ZERO
 var velocity = Vector2.ZERO
+var knockback = Vector2.ZERO
 
 func _ready():
-	pass
+	animation_tree.active = true
 
 func get_input():
 	old_movement_norm = movement_norm
@@ -56,6 +60,7 @@ func update_animations():
 		animation_tree.set("parameters/idle/blend_position", movement_norm)
 		animation_tree.set("parameters/run/blend_position", movement_norm)
 		animation_tree.set("parameters/attack/blend_position", movement_norm)
+		bat_hitbox.knockback_vector = movement_norm
 	
 	if state == Idle:
 		animation_state.travel("idle")
@@ -63,38 +68,49 @@ func update_animations():
 		animation_state.travel("run")
 	if state == Attack:
 		animation_state.travel("attack")
-		velocity = Vector2.ZERO
-
-
-func _process(delta: float) -> void:
-	get_input()
-	update_animations()
 
 func _physics_process(delta):
-	var new_Acceleration = Acceleration
-	
-	if movement_norm.distance_to(old_movement_norm) > 0.5:
-		new_Acceleration *= 2
-	
-	if (movement_norm.length() != 0):
-		velocity = velocity.move_toward(movement_norm * Max_Speed, new_Acceleration * delta)
-	
-	velocity = move_and_slide(velocity)
-	if movement_norm.length() == 0:
-		velocity = velocity.move_toward(Vector2.ZERO, Friction * delta)
-	
-	if velocity.length() != 0:
-		state = Run
-	elif state != Attack:
-		state = Idle
+	match state:
+		STUCK:
+			pass
+		Run:
+			knockback = knockback.move_toward(Vector2.ZERO, Acceleration * delta)
+			knockback = move_and_slide(knockback)
+			
+			var new_Acceleration = Acceleration
+			
+			movement_norm = Vector2.ZERO
+			movement_norm.x = int(Input.is_action_pressed("RIGHT")) - int(Input.is_action_pressed("LEFT"))
+			movement_norm.y = int(Input.is_action_pressed("DOWN")) - int(Input.is_action_pressed("UP"))
+			movement_norm = movement_norm.normalized()
+			
+			if movement_norm != Vector2.ZERO:
+				bat_hitbox.knockback_vector = movement_norm
+				animation_tree.set("parameters/idle/blend_position", movement_norm)
+				animation_tree.set("parameters/run/blend_position", movement_norm)
+				animation_tree.set("parameters/attack/blend_position", movement_norm)
+				animation_state.travel("run")
+				bat_hitbox.knockback_vector = movement_norm
+				velocity = velocity.move_toward(movement_norm * Max_Speed, new_Acceleration * delta)
+			else:
+				animation_state.travel("idle")
+				velocity = velocity.move_toward(Vector2.ZERO, Friction * delta)
+			
+			velocity = move_and_slide(velocity)
+			
+			if Input.is_action_just_pressed("ATTACK"):
+				state = Attack
+		Attack:
+			animation_state.travel("attack")
 
-func move_toward(from, to, step):
-	if to < 0 && from > 0: # Flip step if the signs of to and from are opposite-ish
-		step *= -1
-	
-	return from + (to - (from + step))
+func pause():
+	set_physics_process(false)
+
+func un_pause():
+	set_physics_process(true)
 
 func _on_HurtBox_area_entered(area: Area2D) -> void:
+	knockback = area.knockback_vector * Knockback_Distance
 	stats.health -= area.damage
 	hurt_box.start_invincibility(0.6)
 	hurt_box.create_hit_effect()
@@ -109,4 +125,5 @@ func _on_HurtBox_invincibility_ended() -> void:
 	blink_animation_player.play("stop")
 
 func AttackAnimation_finished() -> void:
-	state = Idle
+	state = Run
+	velocity = Vector2.ZERO

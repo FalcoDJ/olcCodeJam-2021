@@ -30,6 +30,10 @@ config/name="olcCodeJam 2021"
 run/main_scene="res://src/Menus/OpeningScene/StoryMovie.tscn"
 config/icon="res://icon.png"
 
+[autoload]
+
+Globals="*res://src/Globals.gd"
+
 [display]
 
 window/size/width=320
@@ -103,6 +107,7 @@ ATTACK={
 2d_physics/layer_4="SoftCollisions"
 2d_physics/layer_5="PlayerHurtBox"
 2d_physics/layer_6="EnemyHurtBox"
+2d_physics/layer_7="PlayerHitBox"
 
 [physics]
 

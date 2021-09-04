@@ -2,6 +2,7 @@ extends Polygon2D
 
 export(Array) var dialog = ["Hey! I just Created a dialog box!!","Can you believe it?"]
 export(bool) var enable_back_page = false
+export(bool) var auto_start = true
 
 signal moved_to_next_page 
 signal moved_to_previous_page
@@ -18,6 +19,9 @@ func _ready() -> void:
 	next_page()
 	helpers.visible = false
 	backward.visible = enable_back_page
+	
+	set_process(auto_start)
+	visible = auto_start
 
 
 func _process(delta: float) -> void:
@@ -37,6 +41,10 @@ func _process(delta: float) -> void:
 	if Input.is_action_just_released("LEFT") && enable_back_page:
 		if page > 0:
 			previous_page()
+
+func start() -> void:
+	set_process(true)
+	visible = true
 
 func next_page() -> void:
 	page += 1

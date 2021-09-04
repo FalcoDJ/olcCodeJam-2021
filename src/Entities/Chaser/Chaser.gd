@@ -13,15 +13,19 @@ enum {
 }
 var state = IDLE
 
-var velocity  = Vector2.ZERO
-var knockback = Vector2.ZERO
+onready var DeathEffect = preload("res://assets/Effects/EnemyDeathEffect.tscn")
 
+onready var stats: = $Stats
 onready var animated_sprite = $AnimatedSprite
 onready var wander_controller = $WanderController
 onready var soft_collision = $SoftCollision
 onready var hurt_box = $HurtBox
 onready var hit_box = $HitBox
 onready var player_detection_zone = $PlayerDetectionZone
+onready var blink_animation_player = $BlinkAnimationPlayer
+
+var velocity  = Vector2.ZERO
+var knockback = Vector2.ZERO
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -79,3 +83,23 @@ func seek_player() -> void:
 func pick_random_state(state_list):
 	state_list.shuffle()
 	return state_list.pop_front()
+
+func _on_HurtBox_area_entered(area: Area2D) -> void:
+	stats.health -= area.damage
+	knockback = area.knockback_vector * KNOCKBACK_DISTANCE
+	hurt_box.create_hit_effect()
+	hurt_box.start_invincibility(0.4)
+	
+
+func _on_Stats_no_health() -> void:
+	queue_free()
+	var enemy_death_effect = DeathEffect.instance()
+	get_parent().add_child(enemy_death_effect)
+	enemy_death_effect.global_position = global_position
+
+func _on_HurtBox_invincibility_started() -> void:
+	blink_animation_player.play("start")
+
+func _on_HurtBox_invincibility_ended() -> void:
+	blink_animation_player.play("stop")
+
