@@ -15,6 +15,8 @@ onready var stats = $Stats
 onready var blink_animation_player = $BlinkAnimationPlayer
 var player : Actor = null
 
+signal no_health
+
 enum {
 	IDLE,
 	WANDER,
@@ -117,3 +119,4 @@ func _on_Stats_no_health() -> void:
 	var enemy_death_effect = DeathEffect.instance()
 	get_parent().add_child(enemy_death_effect)
 	enemy_death_effect.global_position = global_position
+	emit_signal("no_health")

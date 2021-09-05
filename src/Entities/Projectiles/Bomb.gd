@@ -12,6 +12,7 @@ onready var hitbox = $HitBox
 var velocity = Vector2.ZERO
 
 func _ready() -> void:
+	animation_player.play("default")
 	hitbox.set_collision_mask_bit(Globals.PhysicsLayers.PlayerHurtBox, true)
 	hitbox.set_collision_mask_bit(Globals.PhysicsLayers.EnemyHurtBox, false)
 	
@@ -32,6 +33,6 @@ func _on_DurationTimer_timeout():
 func _on_HurtBox_area_entered(area: Area2D) -> void:
 	velocity = area.global_position.direction_to(global_position) * speed
 	hitbox.knockback_vector = velocity.normalized()
-	
+	duration_timer += 2.0
 	hitbox.set_collision_mask_bit(Globals.PhysicsLayers.PlayerHurtBox, false)
 	hitbox.set_collision_mask_bit(Globals.PhysicsLayers.EnemyHurtBox, true)

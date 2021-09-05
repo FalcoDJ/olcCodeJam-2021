@@ -29,7 +29,6 @@ __meta__ = {
 }
 
 [node name="Portal" parent="." instance=ExtResource( 6 )]
-frame = 2
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 

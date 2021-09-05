@@ -15,10 +15,6 @@ func _physics_process(delta: float) -> void:
 	if gravity_for_portal:
 		player.global_position.move_toward(portal.global_position, 250 * delta)
 
-func _on_Boss_no_health() -> void:
-	dialogbox.start()
-	player.pause()
-
 func _on_DialogBox_finished_dialog() -> void:
 	player.un_pause()
 	portal.visible = true
@@ -32,3 +28,9 @@ func on_PlayerDetectionZone_body_entered(body: Node) -> void:
 
 func _on_Portal_finished() -> void:
 	player.queue_free()
+	get_tree().change_scene("res://src/World/FutureCity.tscn")
+
+func _on_Bomber_no_health() -> void:
+	Globals.has_beaten_mini_boss = true
+	dialogbox.start()
+	player.pause()
